@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -66,5 +68,75 @@
 
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/* Quill */
+
+#content button svg {
+  filter: invert(100%);
+}
+
+.ql-formats .ql-active {
+  color: white;
+}
+
+.ql-editor {
+  font-size: 1.05rem;
+}
+
+.ql-picker-label.ql-active {
+  color: white;
+}
+
+.quill-content p {
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+  font-family: sans-serif;
+}
+
+.quill-content h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  font-family: sans-serif;
+}
+
+.quill-content h2 {
+  font-size: 1.4rem;
+  font-family: sans-serif;
+}
+
+.quill-content h3 {
+  font-size: 1.3rem;
+  font-family: sans-serif;
+}
+
+.quill-content a:hover {
+  text-decoration: underline;
+}
+
+.quill>* {
+  border-color: inherit !important;
+  color: inherit !important;
+}
+
+.quill>.ql-toolbar {
+  border-radius: 10px 10px 0 0;
+}
+
+.quill>.ql-container {
+  font-size: inherit;
+  border-radius: 0 0 10px 10px;
+  width: 100%;
+}
+
+.quill>.ql-container>.ql-editor.ql-blank::before {
+  color: inherit;
+}
+
+@media (min-width: 500px) {
+  .ql-video {
+    width: 100%;
+    aspect-ratio: 16 / 9;
   }
 }
