@@ -6,17 +6,16 @@ const sequelize = new Sequelize({
 });
 
 const Note = sequelize.define("note", {
+  title: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
   content: {
     type: Sequelize.STRING,
     allowNull: false,
   },
-  encrypted: Sequelize.BOOLEAN,
   expiresAt: Sequelize.DATE,
   link: Sequelize.STRING,
-  viewed: {
-    type: Sequelize.BOOLEAN,
-    defaultValue: false,
-  },
 });
 
 sequelize.sync();
