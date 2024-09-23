@@ -77,11 +77,14 @@ export default function NoteForm({
     e.preventDefault();
     setIsLoading(true);
     try {
-      const response = await axios.post("http://localhost:5000/create-note", {
-        title: formData.title,
-        content: formData.content,
-        expiresIn: formData.expiresIn,
-      });
+      const response = await axios.post(
+        `${import.meta.env.VITE_HOST}/create-note`,
+        {
+          title: formData.title,
+          content: formData.content,
+          expiresIn: formData.expiresIn,
+        }
+      );
       setNoteLink(response.data.link);
       setShowAdvanced(false);
       toast({

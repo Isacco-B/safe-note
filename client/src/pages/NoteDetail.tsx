@@ -29,7 +29,9 @@ export default function NoteDetail() {
   useEffect(() => {
     const fetchNote = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/note/${id}`);
+        const response = await axios.get(
+          `${import.meta.env.VITE_HOST}/note/${id}`
+        );
         setNote(response.data);
         console.log(response.data);
       } catch (error) {
