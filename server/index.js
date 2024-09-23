@@ -10,14 +10,16 @@ import {
   formValidator,
 } from "./middleware/index.js";
 import { validationResult } from "express-validator";
+import { corsOptions } from "./config/corsOptions.js";
+import { startCronJobs } from "./cronJobs.js";
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
-app.use(express.json());
+app.use(cors(corsOptions));
+app.use(express.json({ limit: "10mb" }));
 
 async function createNote(req, res, next) {
   const errors = validationResult(req);
@@ -27,7 +29,7 @@ async function createNote(req, res, next) {
     );
   }
 
-  const { content, expiresIn } = req.body;
+  const { title, content, expiresIn } = req.body;
 
   try {
     const algorithm = "aes-256-ctr";
@@ -38,13 +40,13 @@ async function createNote(req, res, next) {
     encrypted += cipher.final("hex");
 
     const note = await Note.create({
+      title,
       content: `${encrypted}:${iv.toString("hex")}:${key.toString("hex")}`,
-      encrypted: true,
       expiresAt: new Date(Date.now() + expiresIn * 60 * 1000),
       link: uuidv4(),
     });
 
-    res.json({ link: `http://localhost:${PORT}/note/${note.link}` });
+    res.json({ link: note.link });
   } catch (error) {
     next(error);
   }
@@ -54,15 +56,16 @@ async function getNote(req, res, next) {
   const { link } = req.params;
 
   if (!link) {
-    return errorHandler(400, "Invalid link");
+    return next(errorHandler(400, "Invalid link"));
   }
   try {
     const note = await Note.findOne({ where: { link } });
 
-    if (!note) return errorHandler(404, "Link not found");
+    if (!note) return next(errorHandler(404, "Link not found"));
 
-    if (note.viewed || note.expiresAt < Date.now()) {
-      return errorHandler(404, "Link already expired");
+    if (note.expiresAt < Date.now()) {
+      await note.destroy();
+      return next(errorHandler(404, "Link already expired"));
     }
 
     const [encryptedData, iv, key] = note.content.split(":");
@@ -74,17 +77,19 @@ async function getNote(req, res, next) {
     let decrypted = decipher.update(encryptedData, "hex", "utf8");
     decrypted += decipher.final("utf8");
 
-    note.viewed = true;
-    await note.save();
+    await note.destroy();
 
-    res.json({ content: decrypted });
+    res.json({
+      title: note.title,
+      content: decrypted,
+    });
   } catch (error) {
     next(error);
   }
 }
 
 app.post("/create-note", loginLimiter, formValidator, createNote);
-app.get("/note/:link", loginLimiter, getNote);
+app.get("/note/:link", getNote);
 
 app.all("*", (req, res) => {
   res.status(404);
@@ -110,4 +115,5 @@ app.listen(PORT, () => {
       : `http://localhost:${PORT}`;
 
   console.log(`Listening on ${baseURL}`);
+  startCronJobs();
 });

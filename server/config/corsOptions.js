@@ -1,8 +1,9 @@
-require("dotenv").config();
+import dotenv from "dotenv";
+dotenv.config();
 
 const allowedOrigins = process.env.ALLOWD_HOSTS.split(",");
 
-const corsOptions = {
+export const corsOptions = {
   origin: (origin, callback) => {
     if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
       callback(null, true);
@@ -12,5 +13,3 @@ const corsOptions = {
   },
   credentials: true,
 };
-
-export default corsOptions;
