@@ -1,6 +1,13 @@
 import { check } from "express-validator";
 
 const formValidator = [
+  check("title")
+    .notEmpty()
+    .withMessage("Title is required")
+    .isString()
+    .withMessage("Title must be a string")
+    .escape()
+    .trim(),
   check("content")
     .notEmpty()
     .withMessage("Content is required")
