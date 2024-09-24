@@ -33,7 +33,6 @@ export default function NoteDetail() {
           `${import.meta.env.VITE_HOST}/note/${id}`
         );
         setNote(response.data);
-        console.log(response.data);
       } catch (error) {
         if (axios.isAxiosError(error)) {
           setError(error.response?.data?.message || "Failed to fetch note.");

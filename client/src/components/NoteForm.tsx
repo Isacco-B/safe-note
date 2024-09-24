@@ -140,8 +140,6 @@ export default function NoteForm({
             id="content"
             value={formData.content}
             onChange={(value) => {
-              console.log(value);
-              console.log(formData)
               if (value.trim() === "" || value === "<p><br></p>") {
                 setFormData({ ...formData, content: ""});
               } else {
