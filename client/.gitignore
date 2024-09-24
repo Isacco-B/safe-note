@@ -8,11 +8,9 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
+/node_modules
 .env
 /env
-/node_modules
-/database.sqlite
-.database.sqlite
 dist-ssr
 *.local
 
