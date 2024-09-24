@@ -78,14 +78,14 @@ export default function NoteForm({
     setIsLoading(true);
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_HOST}/create-note`,
+        `${import.meta.env.VITE_SERVER_HOST}/create-note`,
         {
           title: formData.title,
           content: formData.content,
           expiresIn: formData.expiresIn,
         }
       );
-      setNoteLink(response.data.link);
+      setNoteLink(import.meta.env.VITE_CLIENT_HOST + /note/ + response.data.link);
       setShowAdvanced(false);
       toast({
         title: "Success!",

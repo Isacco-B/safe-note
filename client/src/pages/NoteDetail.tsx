@@ -30,7 +30,7 @@ export default function NoteDetail() {
     const fetchNote = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_HOST}/note/${id}`
+          `${import.meta.env.VITE_SERVER_HOST}/note/${id}`
         );
         setNote(response.data);
       } catch (error) {
